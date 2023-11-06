@@ -1,0 +1,7 @@
+transformers==4.19.2
+datasets==2.4.0
+scikit-learn==1.1.1
+pandas==1.4.2
+numpy==1.23.0
+torch==1.12.1  # ou une version compatible avec votre système
+sentencepiece==0.1.96
