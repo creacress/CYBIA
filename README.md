@@ -14,7 +14,7 @@ Ce projet vise à entraîner un modèle de classification de séquences (CamemBE
 Clonez le dépôt sur votre machine locale :
 
 ```bash
-git clone <url_du_dépôt>
+git clone <https://github.com/creacress/CYBIA.git>
 ```
 
 Installez les dépendances requises en utilisant pip :
