@@ -43,21 +43,26 @@ val_dataset = val_dataset.map(tokenize_function, batched=True)
 train_dataset = train_dataset.rename_column("oh_label", "labels")
 val_dataset = val_dataset.rename_column("oh_label", "labels")
 
-# Configuration de l'entraînement
+# Configuration de l'entraînement avec sauvegarde et évaluation toutes les 26 étapes
 training_args = TrainingArguments(
     output_dir='./results',
-    evaluation_strategy="epoch",
+    evaluation_strategy="steps",  # Aligner la stratégie d'évaluation avec la stratégie de sauvegarde
+    eval_steps=26,                # Évaluer le modèle toutes les 26 étapes
     learning_rate=2e-5,
-    per_device_train_batch_size=32,  # Augmentation possible de la taille du lot
-    per_device_eval_batch_size=32,   # Idem pour la taille du lot d'évaluation
-    num_train_epochs=1,  # Commencer avec moins d'époques pour tester
+    per_device_train_batch_size=32,
+    per_device_eval_batch_size=32,
+    num_train_epochs=1,
     weight_decay=0.01,
-    logging_dir='./logs',  # Ajout d'un répertoire de logs
-    save_strategy="epoch",  # Enregistrer le modèle à chaque époque
+    logging_dir='./logs',
+    save_strategy="steps",        # Sauvegarder le modèle toutes les 26 étapes
+    save_steps=26,                # Sauvegarder le modèle toutes les 15 minutes environ
+    save_total_limit=2,           # Limiter le nombre de checkpoints sauvegardés
     load_best_model_at_end=True,  # Charger le meilleur modèle à la fin de l'entraînement
-    metric_for_best_model="accuracy",  # Mettre en place une métrique pour le meilleur modèle
-    use_cpu=True  # Utiliser le CPU
+    metric_for_best_model="accuracy",
+    use_cpu=True
 )
+
+
 
 # Initialisation du modèle
 model = CamembertForSequenceClassification.from_pretrained('camembert-base', num_labels=2)
