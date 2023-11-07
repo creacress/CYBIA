@@ -1,4 +1,4 @@
-```markdown
+
 # Projet d'Analyse de Toxicité avec CamemBERT
 
 Ce projet vise à entraîner un modèle de classification de séquences (CamemBERT) pour identifier les commentaires toxiques en français. Les commentaires sont classés en deux catégories : toxiques (1) et non toxiques (0).
@@ -79,6 +79,3 @@ Les contributions sont les bienvenues ! Pour contribuer, veuillez forker le dép
 ## Contact
 
 Pour toute question ou demande, veuillez contacter Alexis à l'adresse suivante : alexis@webcresson.com
-```
-
-Assurez-vous de compléter les sections qui nécessitent des informations supplémentaires, comme les instructions pour tester le modèle ou la section "Licence" si applicable.
