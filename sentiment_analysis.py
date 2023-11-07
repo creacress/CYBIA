@@ -1,5 +1,5 @@
 from transformers import CamembertTokenizer, CamembertForSequenceClassification, Trainer, TrainingArguments
-from datasets import Dataset, load_dataset
+from datasets import Dataset
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import pandas as pd
@@ -12,14 +12,12 @@ def compute_metrics(p):
     acc = accuracy_score(labels, predictions)
     return {'accuracy': acc, 'f1': f1, 'precision': precision, 'recall': recall}
 
-
-
-# Chargement des données
-df = pd.read_csv('data/toxicity_french.csv', sep=';')  # Utilisation du délimiteur ';'
+# Chargement des données rééquilibrées
+df = pd.read_csv('data/toxicity_french_upsampled.csv', sep=';')  # Utilisation du délimiteur ';'
 df = df[['Texte', 'oh_label']]  # Conserver uniquement les colonnes nécessaires
 
 # Analyse rapide pour déterminer la longueur maximale utile
-max_length = min(df['Texte'].str.len().quantile(0.95), 512)  # Par exemple, 95% des textes sont plus courts que cette longueur
+max_length = min(df['Texte'].str.len().quantile(0.95), 512)
 
 # Préparation des données pour l'entraînement
 train_df, val_df = train_test_split(df, stratify=df['oh_label'], test_size=0.1)
@@ -43,26 +41,24 @@ val_dataset = val_dataset.map(tokenize_function, batched=True)
 train_dataset = train_dataset.rename_column("oh_label", "labels")
 val_dataset = val_dataset.rename_column("oh_label", "labels")
 
-# Configuration de l'entraînement avec sauvegarde et évaluation toutes les 26 étapes
+# Configuration de l'entraînement
 training_args = TrainingArguments(
     output_dir='./results',
-    evaluation_strategy="steps",  # Aligner la stratégie d'évaluation avec la stratégie de sauvegarde
-    eval_steps=26,                # Évaluer le modèle toutes les 26 étapes
+    evaluation_strategy="steps",
+    eval_steps=26,
     learning_rate=2e-5,
     per_device_train_batch_size=32,
     per_device_eval_batch_size=32,
     num_train_epochs=1,
     weight_decay=0.01,
     logging_dir='./logs',
-    save_strategy="steps",        # Sauvegarder le modèle toutes les 26 étapes
-    save_steps=26,                # Sauvegarder le modèle toutes les 15 minutes environ
-    save_total_limit=2,           # Limiter le nombre de checkpoints sauvegardés
-    load_best_model_at_end=True,  # Charger le meilleur modèle à la fin de l'entraînement
+    save_strategy="steps",
+    save_steps=26,
+    save_total_limit=2,
+    load_best_model_at_end=True,
     metric_for_best_model="accuracy",
     use_cpu=True
 )
-
-
 
 # Initialisation du modèle
 model = CamembertForSequenceClassification.from_pretrained('camembert-base', num_labels=2)
@@ -73,7 +69,7 @@ trainer = Trainer(
     args=training_args,
     train_dataset=train_dataset,
     eval_dataset=val_dataset,
-    compute_metrics=compute_metrics  # Vous passez ici la fonction compute_metrics
+    compute_metrics=compute_metrics
 )
 
 # Entraînement
@@ -84,4 +80,4 @@ eval_results = trainer.evaluate()
 print(eval_results)
 
 # Sauvegarde du modèle entraîné
-trainer.save_model('data/toxicity_model')
+trainer.save_model('toxicity_model')
