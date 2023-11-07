@@ -4,3 +4,4 @@ cybia/
 *.pyc
 .DS_Store  # Pour les utilisateurs de macOS
 data
+results

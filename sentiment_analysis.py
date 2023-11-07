@@ -1,9 +1,26 @@
+import signal
+import sys
 from transformers import CamembertTokenizer, CamembertForSequenceClassification, Trainer, TrainingArguments
 from datasets import Dataset
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import pandas as pd
 import numpy as np
+import torch
+import gc
+import logging
+
+# Configurer le logging pour afficher les informations d'entraînement
+logging.basicConfig(level=logging.INFO)
+
+# Fonction pour gérer l'interruption et sauvegarder le modèle
+def save_on_interrupt(signal_received, frame):
+    print('Interruption reçue: Sauvegarde du modèle en cours...')
+    trainer.save_model('toxicity_model_on_interrupt')
+    sys.exit(0)
+
+# Configuration du gestionnaire de signaux pour intercepter Ctrl+C
+signal.signal(signal.SIGINT, save_on_interrupt)
 
 def compute_metrics(p):
     predictions, labels = p
@@ -44,19 +61,19 @@ val_dataset = val_dataset.rename_column("oh_label", "labels")
 # Configuration de l'entraînement
 training_args = TrainingArguments(
     output_dir='./results',
-    evaluation_strategy="steps",
-    eval_steps=20,
-    learning_rate=2e-5,
-    per_device_train_batch_size=25,
-    per_device_eval_batch_size=25,
-    num_train_epochs=1,
+    evaluation_strategy="epoch",
+    learning_rate=3e-5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+    num_train_epochs=3,
     weight_decay=0.01,
     logging_dir='./logs',
-    save_strategy="steps",
-    save_steps=20,
+    save_strategy="epoch",
     save_total_limit=2,
     load_best_model_at_end=True,
     metric_for_best_model="accuracy",
+    greater_is_better=True,
+    gradient_accumulation_steps=4,
     use_cpu=True
 )
 
@@ -72,12 +89,17 @@ trainer = Trainer(
     compute_metrics=compute_metrics
 )
 
-# Entraînement
-trainer.train()
+# Entraînement dans un bloc try-except pour gérer l'interruption
+try:
+    trainer.train()
+except KeyboardInterrupt:
+    print("Interruption manuelle détectée pendant l'entraînement.")
 
-# Évaluation
+# Évaluation et sauvegarde du modèle
 eval_results = trainer.evaluate()
 print(eval_results)
-
-# Sauvegarde du modèle entraîné
 trainer.save_model('toxicity_model')
+
+# Nettoyage de la mémoire si nécessaire
+gc.collect()
+torch.cuda.empty_cache()
