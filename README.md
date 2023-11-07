@@ -1,4 +1,3 @@
-
 ```markdown
 # Projet d'Analyse de Toxicité avec CamemBERT
 
@@ -8,13 +7,14 @@ Ce projet vise à entraîner un modèle de classification de séquences (CamemBE
 
 - Python 3.8+
 - pip (Python package installer)
+- conda 23.3.1
 
 ## Installation
 
 Clonez le dépôt sur votre machine locale :
 
 ```bash
-git clone <https://github.com/creacress/CYBIA.git>
+git clone https://github.com/creacress/CYBIA.git
 ```
 
 Installez les dépendances requises en utilisant pip :
@@ -30,6 +30,15 @@ Les dépendances principales sont les suivantes :
 - `sklearn` pour les fonctions de séparation des données d'entraînement et de test et les métriques d'évaluation.
 - `pandas` pour la manipulation et l'analyse des données.
 - `numpy` pour les calculs numériques.
+
+## Configuration
+
+Avant de commencer, assurez-vous que votre environnement Python est configuré correctement. Si nécessaire, créez un environnement virtuel et activez-le :
+
+```bash
+conda create --name monenv python=3.8
+conda activate monenv
+```
 
 ## Structure du Projet
 
@@ -57,9 +66,19 @@ Le script effectuera les étapes suivantes :
 7. Évaluer le modèle et imprimer les métriques de performance.
 8. Sauvegarder le modèle entraîné dans `models/`.
 
+Pour tester le modèle avec de nouveaux commentaires, suivez les instructions suivantes (fournir les instructions détaillées).
+
+## Contribution
+
+Les contributions sont les bienvenues ! Pour contribuer, veuillez forker le dépôt, créer une branche pour votre fonctionnalité, puis soumettre une pull request.
+
+## Licence
+
 
 
 ## Contact
 
-alexis@webcresson
+Pour toute question ou demande, veuillez contacter Alexis à l'adresse suivante : alexis@webcresson.com
 ```
+
+Assurez-vous de compléter les sections qui nécessitent des informations supplémentaires, comme les instructions pour tester le modèle ou la section "Licence" si applicable.

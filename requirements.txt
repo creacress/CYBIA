@@ -3,5 +3,5 @@ datasets==2.4.0
 scikit-learn==1.1.1
 pandas==1.4.2
 numpy==1.23.0
-torch==1.12.1  # ou une version compatible avec votre système
+torch==1.12.1  # Assurez-vous que cette version est compatible avec votre version de CUDA si vous utilisez une carte NVIDIA
 sentencepiece==0.1.96
