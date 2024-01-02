@@ -1,81 +1,38 @@
+# Projet de Classification de Toxicité des Textes - CYBIA 
 
-# Projet d'Analyse de Toxicité avec CamemBERT
+## Description
+Ce projet développe un classificateur de toxicité des textes en français en utilisant le modèle de deep learning `Camembert`. 
+Il est capable de distinguer entre des textes toxiques et non-toxiques, et peut être ré-entraîné avec de nouvelles données pour améliorer sa précision.
 
-Ce projet vise à entraîner un modèle de classification de séquences (CamemBERT) pour identifier les commentaires toxiques en français. Les commentaires sont classés en deux catégories : toxiques (1) et non toxiques (0).
+## Fonctionnalités
+- Chargement et préparation des données textuelles.
+- Tokenisation et transformation des données pour `Camembert`.
+- Entraînement, évaluation et ré-entraînement du modèle.
+- Prédiction de la toxicité sur de nouveaux échantillons de texte.
+- Optimisation des hyperparamètres avec Optuna.
+- Intégration des retours des utilisateurs pour le ré-entraînement.
 
-## Prérequis
-
-- Python 3.8+
-- pip (Python package installer)
-- conda 23.3.1
-
-## Installation
-
-Clonez le dépôt sur votre machine locale :
-
-```bash
-git clone https://github.com/creacress/CYBIA.git
-```
-
-Installez les dépendances requises en utilisant pip :
-
-```bash
-pip install -r requirements.txt
-```
-
-Les dépendances principales sont les suivantes :
-
-- `transformers` pour les modèles pré-entraînés et les tokeniseurs.
-- `datasets` pour le chargement et la manipulation des ensembles de données.
-- `sklearn` pour les fonctions de séparation des données d'entraînement et de test et les métriques d'évaluation.
-- `pandas` pour la manipulation et l'analyse des données.
-- `numpy` pour les calculs numériques.
-
-## Configuration
-
-Avant de commencer, assurez-vous que votre environnement Python est configuré correctement. Si nécessaire, créez un environnement virtuel et activez-le :
-
-```bash
-conda create --name monenv python=3.8
-conda activate monenv
-```
+## Bibliothèques Utilisées
+- `logging`, `sys`, `numpy`, `pandas` : Pour la manipulation des données et le logging.
+- `datasets`, `sklearn`, `transformers`, `torch` : Outils d'apprentissage automatique et de deep learning.
+- `gc`, `signal`, `time`, `random`, `optuna`, `os` : Diverses fonctionnalités de gestion de systèmes et d'optimisation.
+- `sqlite3` : Pour la gestion des bases de données SQLite dans le script de ré-entraînement.
 
 ## Structure du Projet
-
-- `data/`: Dossier contenant le dataset `toxicity_french.csv`.
-- `models/`: Dossier où le modèle entraîné sera sauvegardé.
-- `train.py`: Script d'entraînement du modèle.
-- `requirements.txt`: Fichier contenant toutes les dépendances à installer.
+- `ToxicityClassifier` : Classe pour la construction, l'entraînement et l'évaluation initiale du modèle.
+- `ToxicityReTrainer` : Classe pour le ré-entraînement du modèle avec de nouvelles données.
+- `LoggingCallback` : Callback pour l'enregistrement des logs pendant l'entraînement.
 
 ## Utilisation
+Pour utiliser ce projet, installez les dépendances requises et suivez les instructions spécifiques dans le script principal pour l'entraînement, l'évaluation et le ré-entraînement du modèle.
 
-Pour entraîner le modèle, exécutez le script `train.py` :
+## Ré-Entraînement du Modèle
+Le script de ré-entraînement permet d'ajuster et d'améliorer le modèle existant avec de nouvelles données. Il charge les nouvelles données d'une base de données SQLite et ré-entraîne le modèle Camembert pré-existant.
 
-```bash
-python train.py
-```
+### Utilisation du Ré-Entraînement
+1. Préparez le modèle pré-entraîné et le nouveau fichier de données.
+2. Exécutez le script de ré-entraînement pour ajuster le modèle.
 
-Le script effectuera les étapes suivantes :
+## Contribution et Licence
+Les contributions à ce projet sont les bienvenues. Veuillez soumettre vos pull requests sur GitHub. Ce projet est distribué sous la licence MIT.
 
-1. Charger les données depuis `data/toxicity_french.csv`.
-2. Tokeniser les commentaires en utilisant `CamembertTokenizer`.
-3. Séparer les données en ensembles d'entraînement et de validation.
-4. Configurer les arguments d'entraînement avec `TrainingArguments`.
-5. Initialiser `CamembertForSequenceClassification` avec le nombre correct de labels.
-6. Entraîner le modèle en utilisant `Trainer`.
-7. Évaluer le modèle et imprimer les métriques de performance.
-8. Sauvegarder le modèle entraîné dans `models/`.
-
-Pour tester le modèle avec de nouveaux commentaires, suivez les instructions suivantes (fournir les instructions détaillées).
-
-## Contribution
-
-Les contributions sont les bienvenues ! Pour contribuer, veuillez forker le dépôt, créer une branche pour votre fonctionnalité, puis soumettre une pull request.
-
-## Licence
-
-
-
-## Contact
-
-Pour toute question ou demande, veuillez contacter Alexis à l'adresse suivante : alexis@webcresson.com
